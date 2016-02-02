@@ -19,15 +19,16 @@ void Zones::update() {
 }
 
 void Zones::draw() {
-    ofNoFill();
     
     // draw the rects in zones
-    ofSetHexColor(0x990099);
+    ofFill();
+    ofSetColor(255, 0, 255, 80);
     for (ofRectangle r : allZones) {
         ofDrawRectangle(r);
     }
     
     // draw the rect being drawn
+    ofNoFill();
     ofSetHexColor(0xff00ff);
     if (isPressed) {
         ofDrawRectangle(rectStart, ofGetMouseX() - rectStart.x, ofGetMouseY() - rectStart.y);
@@ -45,7 +46,7 @@ void Zones::mouseReleased(int x, int y, int button) {
     rectEnd = ofPoint(x, y);
     
     // save rect
-    allZones.push_back(ofRectangle(rectStart.x, rectStart.y, rectEnd.x-rectStart.x, rectEnd.y-rectStart.y));
+    allZones.push_back(ofRectangle(rectStart, rectEnd));
     
     // reset
     isPressed = false;
