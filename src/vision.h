@@ -11,8 +11,8 @@
 
 #define _USE_LIVE_VIDEO
 
-#ifndef vision_hpp
-#define vision_hpp
+#ifndef vision_h
+#define vision_h
 
 class Vision {
     
@@ -30,26 +30,31 @@ public:
     
     ofxCvColorImage	colorImage;
     ofxCvColorImage colorPrev;
+    ofxCvColorImage colorDiff;
     
-    ofxCvGrayscaleImage redImage;
-    ofxCvGrayscaleImage redPrev;
-    ofxCvGrayscaleImage redDiff;
+//    ofxCvGrayscaleImage redImage;
+//    ofxCvGrayscaleImage redPrev;
+//    ofxCvGrayscaleImage redDiff;
+//    
+//    ofxCvGrayscaleImage greenImage;
+//    ofxCvGrayscaleImage greenPrev;
+//    ofxCvGrayscaleImage greenDiff;
+//    
+//    ofxCvGrayscaleImage blueImage;
+//    ofxCvGrayscaleImage bluePrev;
+//    ofxCvGrayscaleImage blueDiff;
     
-    ofxCvGrayscaleImage greenImage;
-    ofxCvGrayscaleImage greenPrev;
-    ofxCvGrayscaleImage greenDiff;
-    
-    ofxCvGrayscaleImage blueImage;
-    ofxCvGrayscaleImage bluePrev;
-    ofxCvGrayscaleImage blueDiff;
-    
-    ofPixels colorImagePixels;
-    ofPixels colorPrevPixels;
+    unsigned char * colorImagePixels;
+    unsigned char * colorPrevPixels;
+    unsigned char * colorDiffPixels;
+    unsigned char * grayDiffFromColorPixels;
     
     ofxCvGrayscaleImage grayImage;
     ofxCvGrayscaleImage grayBg;
     ofxCvGrayscaleImage grayPrev;
     ofxCvGrayscaleImage grayDiff;
+    
+    ofxCvGrayscaleImage grayDiffFromColor;
     
     ofxCvContourFinder contourFinder;
     

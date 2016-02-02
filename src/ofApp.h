@@ -5,6 +5,7 @@
 
 #include "gui.h"
 #include "vision.h"
+#include "zones.h"
 
 class ofApp : public ofBaseApp {
     
@@ -28,6 +29,7 @@ public:
 
     Vision vision;
     Gui gui;
+    Zones zones;
     
     
 };

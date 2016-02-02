@@ -4,6 +4,7 @@
 void ofApp::setup(){
     vision.setup();
     gui.setup();
+    zones.setup();
 }
 
 //--------------------------------------------------------------
@@ -12,6 +13,7 @@ void ofApp::update(){
     
     vision.update();
     gui.update();
+    zones.update();
 }
 
 //--------------------------------------------------------------
@@ -19,6 +21,7 @@ void ofApp::draw(){
     
     vision.draw();
     gui.draw();
+    zones.draw();
 }
 
 //--------------------------------------------------------------
@@ -44,12 +47,12 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    
+    zones.mousePressed(x, y, button);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-    
+    zones.mouseReleased(x, y, button);
 }
 
 //--------------------------------------------------------------

@@ -25,6 +25,7 @@
 		CA4D5A2A8FD9D8E629C236FC /* ofxSliderGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80034F1124501B22421BA90C /* ofxSliderGroup.cpp */; };
 		CD32AA74E5475B3AB0409BFD /* ofxCvHaarFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B537E0DF0BAB66C0D0865B2A /* ofxCvHaarFinder.cpp */; };
 		D1FD05DF9F1FF05439680196 /* ofxToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CDFD749352AB47C6FC8CAB20 /* ofxToggle.cpp */; };
+		D205AD461C61559100723D45 /* zones.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D205AD441C61559100723D45 /* zones.cpp */; };
 		D2884A111C5C179800742755 /* gui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D2884A101C5C179800742755 /* gui.cpp */; };
 		D2884A141C5D73D300742755 /* vision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D2884A121C5D73D300742755 /* vision.cpp */; };
 		E21AAFA1F7F09963CA573A57 /* ofxSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 536B3431546F10A5556D0E0C /* ofxSlider.cpp */; };
@@ -220,6 +221,9 @@
 		CDFD749352AB47C6FC8CAB20 /* ofxToggle.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxToggle.cpp; path = ../../Apps/of_v0.9.0_osx_release/addons/ofxGui/src/ofxToggle.cpp; sourceTree = SOURCE_ROOT; };
 		CEA51D975DAFC24F417A88CF /* types_c.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = types_c.h; path = ../../Apps/of_v0.9.0_osx_release/addons/ofxOpenCv/libs/opencv/include/opencv2/imgproc/types_c.h; sourceTree = SOURCE_ROOT; };
 		CFE88E74E0206400D3E1E725 /* simd_functions.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = simd_functions.hpp; path = ../../Apps/of_v0.9.0_osx_release/addons/ofxOpenCv/libs/opencv/include/opencv2/gpu/device/simd_functions.hpp; sourceTree = SOURCE_ROOT; };
+		D205AD441C61559100723D45 /* zones.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = zones.cpp; sourceTree = "<group>"; };
+		D205AD451C61559100723D45 /* zones.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zones.h; sourceTree = "<group>"; };
+		D205AD471C61642B00723D45 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		D2884A0F1C5C169C00742755 /* gui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gui.h; sourceTree = "<group>"; };
 		D2884A101C5C179800742755 /* gui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gui.cpp; sourceTree = "<group>"; };
 		D2884A121C5D73D300742755 /* vision.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vision.cpp; sourceTree = "<group>"; };
@@ -758,6 +762,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				D205AD471C61642B00723D45 /* .gitignore */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
@@ -778,6 +783,8 @@
 				D2884A101C5C179800742755 /* gui.cpp */,
 				D2884A121C5D73D300742755 /* vision.cpp */,
 				D2884A131C5D73D300742755 /* vision.h */,
+				D205AD441C61559100723D45 /* zones.cpp */,
+				D205AD451C61559100723D45 /* zones.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -897,6 +904,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
+				D205AD461C61559100723D45 /* zones.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
 				38EC8488E85D4D5ABF6E9B11 /* ofxBaseGui.cpp in Sources */,
 				D2884A141C5D73D300742755 /* vision.cpp in Sources */,

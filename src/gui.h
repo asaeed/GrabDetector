@@ -53,4 +53,4 @@ public:
 };
 
 
-#endif /* gui_h */
+#endif
