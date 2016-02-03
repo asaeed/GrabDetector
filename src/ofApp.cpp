@@ -9,7 +9,6 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    ofBackground(100,100,100);
     
     vision.update();
     gui.update();
@@ -18,6 +17,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofBackground(100,100,100);
     
     vision.draw();
     gui.draw();

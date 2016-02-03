@@ -34,13 +34,13 @@ public:
     void gotMessage(ofMessage msg);
     
     vector<ofRectangle> allZones;
+    ofRectangle windowBorder;
     ofPoint mouseStart;
     ofPoint mouseEnd;
     bool isDrawing;
     bool isDragging;
     int dragRectIndex;
     ofPoint dragRectPosition;
-    
     
 };
 

@@ -9,7 +9,7 @@
 #include "vision.h"
 
 //--------------------------------------------------------------
-// a better strategy might be to set the framerate very low
+// TODO: a better strategy might be to set the framerate very low
 // (either on video stream or manually with a timer)
 // around 1 fps, and check for differences just in the zones by
 // comparing prev and current frame zone by zone.
@@ -35,22 +35,9 @@ void Vision::setup(){
     colorPrev.allocate(vidWidth, vidHeight);
     colorDiff.allocate(vidWidth, vidHeight);
     
-    // needed to allocate memory
+    // needed to allocate memory for these somehow
     colorPrevPixels = colorDiff.getPixels();
     colorDiffPixels = colorDiff.getPixels();
-    
-//    
-//    redImage.allocate(vidWidth, vidHeight);
-//    redPrev.allocate(vidWidth, vidHeight);
-//    redDiff.allocate(vidWidth, vidHeight);
-//    
-//    greenImage.allocate(vidWidth, vidHeight);
-//    greenPrev.allocate(vidWidth, vidHeight);
-//    greenDiff.allocate(vidWidth, vidHeight);
-//    
-//    blueImage.allocate(vidWidth, vidHeight);
-//    bluePrev.allocate(vidWidth, vidHeight);
-//    blueDiff.allocate(vidWidth, vidHeight);
     
     grayImage.allocate(vidWidth, vidHeight);
     grayBg.allocate(vidWidth, vidHeight);
@@ -89,8 +76,6 @@ void Vision::update(){
         colorPrevPixels = colorPrev.getPixels();
         colorImage.setFromPixels(colorImagePixels, vidWidth, vidHeight);
         
-        
-        float thresh = 40.0f;
         float dist;
         int amp = 1;
         for (int i = 0; i < vidWidth * vidHeight; i++) {
@@ -102,31 +87,11 @@ void Vision::update(){
                 + colorDiffPixels[i*3+1] * colorDiffPixels[i*3+1]
                 + colorDiffPixels[i*3+2] * colorDiffPixels[i*3+2];
             dist = sqrt(dist);
-            grayDiffFromColorPixels[i] = dist;
-//            if (dist > thresh)
-//                grayDiffFromColorPixels[i] = 255;
-//            else
-//                grayDiffFromColorPixels[i] = 0;
-            
         }
         
         colorDiff.setFromPixels(colorDiffPixels, vidWidth, vidHeight);
         grayDiffFromColor.setFromPixels(grayDiffFromColorPixels, vidWidth, vidHeight);
         grayDiffFromColor.threshold(threshold);
-        
-        
-//        redImage.setFromPixels(colorImagePixels.getChannel(0));
-//        redPrev.setFromPixels(colorPrevPixels.getChannel(0));
-//        redDiff.absDiff(redPrev, redImage);
-//        
-//        greenImage.setFromPixels(colorImagePixels.getChannel(1));
-//        greenPrev.setFromPixels(colorPrevPixels.getChannel(1));
-//        greenDiff.absDiff(greenPrev, greenImage);
-//        
-//        blueImage.setFromPixels(colorImagePixels.getChannel(2));
-//        bluePrev.setFromPixels(colorPrevPixels.getChannel(2));
-//        blueDiff.absDiff(bluePrev, blueImage);
-        
         
         
         // set grayscale image
