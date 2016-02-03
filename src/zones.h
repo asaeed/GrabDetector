@@ -34,9 +34,12 @@ public:
     void gotMessage(ofMessage msg);
     
     vector<ofRectangle> allZones;
-    ofPoint rectStart;
-    ofPoint rectEnd;
-    bool isPressed;
+    ofPoint mouseStart;
+    ofPoint mouseEnd;
+    bool isDrawing;
+    bool isDragging;
+    int dragRectIndex;
+    ofPoint dragRectPosition;
     
     
 };

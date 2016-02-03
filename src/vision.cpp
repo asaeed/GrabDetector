@@ -9,6 +9,12 @@
 #include "vision.h"
 
 //--------------------------------------------------------------
+// a better strategy might be to set the framerate very low
+// around 1 fps, and check for differences just in the zones by
+// comparing prev and current frame zone by zone.
+//--------------------------------------------------------------
+
+
 void Vision::setup(){
     vidWidth = 160;
     vidHeight = 120;
