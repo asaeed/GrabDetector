@@ -10,6 +10,7 @@
 
 //--------------------------------------------------------------
 // a better strategy might be to set the framerate very low
+// (either on video stream or manually with a timer)
 // around 1 fps, and check for differences just in the zones by
 // comparing prev and current frame zone by zone.
 //--------------------------------------------------------------

@@ -26,6 +26,9 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
+    // TODO: classes representing app components are declared here
+    // they need to be either set up as singletons so they can instantiate each other in setup
+    // or only instantiate here and use the event system to communicate among them
 
     Vision vision;
     Gui gui;
