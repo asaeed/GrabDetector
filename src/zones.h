@@ -37,10 +37,16 @@ public:
     ofRectangle windowBorder;
     ofPoint mouseStart;
     ofPoint mouseEnd;
+    float minSize;
     bool isDrawing;
     bool isDragging;
+    bool isResizing;
+    
+    ofRectangle newRect;
     int dragRectIndex;
     ofPoint dragRectPosition;
+    float dragRectWidth;
+    float dragRectHeight;
     
 };
 

@@ -11,8 +11,10 @@
 void Zones::setup() {
     isDrawing = false;
     isDragging = false;
+    isResizing = false;
     mouseStart = ofPoint(0, 0);
     mouseEnd = ofPoint(0, 0);
+    minSize = 20.0f;
     
     windowBorder = ofRectangle(10, 10, ofGetWidth()-20, ofGetHeight()-20);
 }
@@ -21,6 +23,9 @@ void Zones::update() {
     if (isDragging) {
         // move the zone as the mouse moves
         allZones[dragRectIndex].position = dragRectPosition + ofPoint(ofGetMouseX() - mouseStart.x, ofGetMouseY() - mouseStart.y);
+    } else if (isResizing) {
+        allZones[dragRectIndex].width = MAX(minSize, dragRectWidth + ofGetMouseX() - mouseStart.x);
+        allZones[dragRectIndex].height = MAX(minSize, dragRectHeight + ofGetMouseY() - mouseStart.y);
     }
 }
 
@@ -34,10 +39,13 @@ void Zones::draw() {
         ofDrawRectangle(r);
         
         // label the zone with id
-        ofSetColor(255, 255, 255);
+        ofSetColor(0, 255, 255);
         stringstream reportStr;
         reportStr << i << endl;
         ofDrawBitmapString(reportStr.str(), r.position.x + 4, r.position.y + 14);
+        
+        // bottom right corner hit area
+        ofDrawRectangle(r.position.x + r.width - 10, r.position.y + r.height - 10, 10, 10);
         
         i++;
     }
@@ -63,17 +71,27 @@ void Zones::draw() {
 }
 
 void Zones::mousePressed(int x, int y, int button) {
+    
+    // either way store mouse start
+    mouseStart = ofPoint(x, y);
+    
     // first check if you hit an existing rect
     dragRectIndex = -1;;
     for (int i = allZones.size() - 1; i >= 0; i--) {
         if (allZones[i].inside(x, y)) {
             
-            // TODO: if on bottom right corner, do resizing
+            // if on bottom right corner, do resizing
+            if (x > allZones[i].position.x + allZones[i].width - 10 && y > allZones[i].position.y + allZones[i].height - 10) {
+                isResizing = true;
+            } else {
+                // else do dragging
+                isDragging = true;
+            }
             
-            // else do dragging
-            isDragging = true;
             dragRectIndex = i;
             dragRectPosition = allZones[i].position;
+            dragRectWidth = allZones[i].width;
+            dragRectHeight = allZones[i].height;
             
             break;
         }
@@ -85,16 +103,18 @@ void Zones::mousePressed(int x, int y, int button) {
     if (dragRectIndex == -1) {
         isDrawing = true;
     }
-    
-    // either way store mouse start
-    mouseStart = ofPoint(x, y);
 }
 
 void Zones::mouseReleased(int x, int y, int button) {
     // save new rect if drawing
     if (isDrawing) {
         mouseEnd = ofPoint(x, y);
-        allZones.push_back(ofRectangle(mouseStart, mouseEnd));
+        newRect = ofRectangle(mouseStart, mouseEnd);
+        
+        // make sure it has min width and height;
+        if (newRect.width < minSize) newRect.setWidth(minSize);
+        if (newRect.height < minSize) newRect.setHeight(minSize);
+        allZones.push_back(newRect);
     }
     
     // delete zone if dragged out of bounds
@@ -108,6 +128,7 @@ void Zones::mouseReleased(int x, int y, int button) {
     // reset
     isDrawing = false;
     isDragging = false;
+    isResizing = false;
     
     // TODO: here could use events to send new zone data to Vision class
     
