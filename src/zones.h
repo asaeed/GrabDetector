@@ -10,12 +10,12 @@
 #define zones_h
 
 #include "ofMain.h"
-#include "ofxGui.h"
+#include "vision.h"
 
 class Zones {
     
 public:
-    void setup();
+    void setup(Vision * v);
     void update();
     void draw();
     
@@ -32,6 +32,8 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
+    
+    Vision * visionPtr;
     
     vector<ofRectangle> allZones;
     ofRectangle windowBorder;

@@ -8,7 +8,7 @@
 
 #include "zones.h"
 
-void Zones::setup() {
+void Zones::setup(Vision * v) {
     isDrawing = false;
     isDragging = false;
     isResizing = false;
@@ -17,6 +17,8 @@ void Zones::setup() {
     minSize = 20.0f;
     
     windowBorder = ofRectangle(10, 10, ofGetWidth()-20, ofGetHeight()-20);
+    
+    this->visionPtr = v;
 }
 
 void Zones::update() {
@@ -122,7 +124,6 @@ void Zones::mouseReleased(int x, int y, int button) {
         if (!windowBorder.intersects(allZones[dragRectIndex])) {
             allZones.erase(allZones.begin() + dragRectIndex);
         }
-
     }
     
     // reset
@@ -130,6 +131,6 @@ void Zones::mouseReleased(int x, int y, int button) {
     isDragging = false;
     isResizing = false;
     
-    // TODO: here could use events to send new zone data to Vision class
-    
+    // use events to send new zone data to Vision class
+    visionPtr->setZones(allZones);
 }

@@ -187,3 +187,8 @@ void Vision::keyPressed(int key){
     }
 }
 
+void Vision::setZones(vector<ofRectangle> allZones) {
+    zones = allZones;
+    cout << allZones.size() << endl;
+}
+

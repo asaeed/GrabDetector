@@ -4,7 +4,9 @@
 void ofApp::setup(){
     vision.setup();
     gui.setup();
-    zones.setup();
+    zones.setup(&vision);
+    
+    //vision.glue(&zones);
 }
 
 //--------------------------------------------------------------

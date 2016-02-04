@@ -26,9 +26,10 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
-    // TODO: classes representing app components are declared here
-    // they need to be either set up as singletons so they can instantiate each other in setup
-    // or only instantiate here and use the event system to communicate among them
+    // classes representing app components are declared here
+    // they could be either set up as singletons so they can instantiate each other in setup
+    // for now i'm simply passing each a ref to any other Class it needs to communicate with
+    // ofEvent could also be leveraged but doesn't seem to have any clear advantage
 
     Vision vision;
     Gui gui;

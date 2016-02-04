@@ -21,6 +21,9 @@ public:
     void update();
     void draw();
     void keyPressed(int key);
+    void setZones(vector<ofRectangle> allZones);
+    
+    //void glue(Zones * z);
     
 #ifdef _USE_LIVE_VIDEO
     ofVideoGrabber 		vidGrabber;
@@ -31,18 +34,6 @@ public:
     ofxCvColorImage	colorImage;
     ofxCvColorImage colorPrev;
     ofxCvColorImage colorDiff;
-    
-//    ofxCvGrayscaleImage redImage;
-//    ofxCvGrayscaleImage redPrev;
-//    ofxCvGrayscaleImage redDiff;
-//    
-//    ofxCvGrayscaleImage greenImage;
-//    ofxCvGrayscaleImage greenPrev;
-//    ofxCvGrayscaleImage greenDiff;
-//    
-//    ofxCvGrayscaleImage blueImage;
-//    ofxCvGrayscaleImage bluePrev;
-//    ofxCvGrayscaleImage blueDiff;
     
     unsigned char * colorImagePixels;
     unsigned char * colorPrevPixels;
@@ -65,6 +56,8 @@ public:
     
     int threshold;
     bool bLearnBakground;
+    
+    vector<ofRectangle> zones;
 };
 
 
