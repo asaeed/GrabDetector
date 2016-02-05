@@ -29,9 +29,9 @@ public:
     Zones * zonesPtr;
     
 #ifdef _USE_LIVE_VIDEO
-    ofVideoGrabber 		vidGrabber;
+    ofVideoGrabber 		video;
 #else
-    ofVideoPlayer 		vidPlayer;
+    ofVideoPlayer 		video;
 #endif
     
     ofxCvColorImage	colorImage;

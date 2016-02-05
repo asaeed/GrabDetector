@@ -22,7 +22,7 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(100,100,100);
     
-    //vision.draw();
+    vision.draw();
     gui.draw();
     zones.draw();
 }

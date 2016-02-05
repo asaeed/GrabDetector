@@ -24,12 +24,12 @@ void Vision::setup(){
     vidRenderHeight = 480;
     
 #ifdef _USE_LIVE_VIDEO
-    vidGrabber.setVerbose(true);
-    vidGrabber.setup(vidWidth, vidHeight);
+    video.setVerbose(true);
+    video.setup(vidWidth, vidHeight);
 #else
-    vidPlayer.load("fingers.mov");
-    vidPlayer.play();
-    vidPlayer.setLoopState(OF_LOOP_NORMAL);
+    video.load("fingers.mov");
+    video.play();
+    video.setLoopState(OF_LOOP_NORMAL);
 #endif
     
     colorImage.allocate(vidWidth, vidHeight);
@@ -60,23 +60,11 @@ void Vision::glue(Zones * z) {
 //--------------------------------------------------------------
 void Vision::update(){
     
-    bool bNewFrame = false;
+    video.update();
     
-#ifdef _USE_LIVE_VIDEO
-    vidGrabber.update();
-    bNewFrame = vidGrabber.isFrameNew();
-#else
-    vidPlayer.update();
-    bNewFrame = vidPlayer.isFrameNew();
-#endif
-    
-    if (bNewFrame){
-        
-#ifdef _USE_LIVE_VIDEO
-        colorImagePixels = vidGrabber.getPixels();
-#else
-        colorImagePixels = vidPlayer.getPixels();
-#endif
+    if (video.isFrameNew()){
+
+        colorImagePixels = video.getPixels();
         
         colorPrevPixels = colorPrev.getPixels();
         colorImage.setFromPixels(colorImagePixels, vidWidth, vidHeight);
