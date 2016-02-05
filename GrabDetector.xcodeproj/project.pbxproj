@@ -781,10 +781,10 @@
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 				D2884A101C5C179800742755 /* gui.cpp */,
 				D2884A0F1C5C169C00742755 /* gui.h */,
-				D2884A121C5D73D300742755 /* vision.cpp */,
-				D2884A131C5D73D300742755 /* vision.h */,
 				D205AD441C61559100723D45 /* zones.cpp */,
 				D205AD451C61559100723D45 /* zones.h */,
+				D2884A121C5D73D300742755 /* vision.cpp */,
+				D2884A131C5D73D300742755 /* vision.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

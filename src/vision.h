@@ -14,6 +14,8 @@
 #ifndef vision_h
 #define vision_h
 
+class Zones;
+
 class Vision {
     
 public:
@@ -21,9 +23,10 @@ public:
     void update();
     void draw();
     void keyPressed(int key);
-    void setZones(vector<ofRectangle> allZones);
+    void showZones();
     
-    //void glue(Zones * z);
+    void glue(Zones * z);
+    Zones * zonesPtr;
     
 #ifdef _USE_LIVE_VIDEO
     ofVideoGrabber 		vidGrabber;
@@ -56,8 +59,7 @@ public:
     
     int threshold;
     bool bLearnBakground;
-    
-    vector<ofRectangle> zones;
+
 };
 
 

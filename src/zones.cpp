@@ -7,8 +7,9 @@
 //
 
 #include "zones.h"
+#include "vision.h"
 
-void Zones::setup(Vision * v) {
+void Zones::setup() {
     isDrawing = false;
     isDragging = false;
     isResizing = false;
@@ -17,7 +18,9 @@ void Zones::setup(Vision * v) {
     minSize = 20.0f;
     
     windowBorder = ofRectangle(10, 10, ofGetWidth()-20, ofGetHeight()-20);
-    
+}
+
+void Zones::glue(Vision * v) {
     this->visionPtr = v;
 }
 
@@ -132,5 +135,5 @@ void Zones::mouseReleased(int x, int y, int button) {
     isResizing = false;
     
     // use events to send new zone data to Vision class
-    visionPtr->setZones(allZones);
+    visionPtr->showZones();
 }

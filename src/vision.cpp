@@ -7,6 +7,7 @@
 //
 
 #include "vision.h"
+#include "zones.h"
 
 //--------------------------------------------------------------
 // TODO: a better strategy might be to set the framerate very low
@@ -50,6 +51,10 @@ void Vision::setup(){
     
     bLearnBakground = true;
     threshold = 40;
+}
+
+void Vision::glue(Zones * z) {
+    zonesPtr = z;
 }
 
 //--------------------------------------------------------------
@@ -187,8 +192,7 @@ void Vision::keyPressed(int key){
     }
 }
 
-void Vision::setZones(vector<ofRectangle> allZones) {
-    zones = allZones;
-    cout << allZones.size() << endl;
+void Vision::showZones() {
+    cout << zonesPtr->allZones.size() << endl;
 }
 

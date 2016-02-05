@@ -4,9 +4,10 @@
 void ofApp::setup(){
     vision.setup();
     gui.setup();
-    zones.setup(&vision);
+    zones.setup();
     
-    //vision.glue(&zones);
+    vision.glue(&zones);
+    zones.glue(&vision);
 }
 
 //--------------------------------------------------------------
@@ -21,7 +22,7 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(100,100,100);
     
-    vision.draw();
+    //vision.draw();
     gui.draw();
     zones.draw();
 }

@@ -10,12 +10,13 @@
 #define zones_h
 
 #include "ofMain.h"
-#include "vision.h"
+
+class Vision;
 
 class Zones {
     
 public:
-    void setup(Vision * v);
+    void setup();
     void update();
     void draw();
     
@@ -33,6 +34,7 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
+    void glue(Vision * v);
     Vision * visionPtr;
     
     vector<ofRectangle> allZones;
