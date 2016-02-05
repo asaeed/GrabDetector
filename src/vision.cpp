@@ -51,6 +51,10 @@ void Vision::setup(){
     
     bLearnBakground = true;
     threshold = 40;
+    
+    // this interval is the "manual framerate" setting
+    interval = 0; // can be set to 1000
+    lastTime = 0;
 }
 
 void Vision::glue(Zones * z) {
@@ -60,54 +64,95 @@ void Vision::glue(Zones * z) {
 //--------------------------------------------------------------
 void Vision::update(){
     
-    video.update();
+    curTime = ofGetElapsedTimeMillis();
     
-    if (video.isFrameNew()){
-
-        colorImagePixels = video.getPixels();
+    if (curTime > lastTime + interval) {
         
-        colorPrevPixels = colorPrev.getPixels();
-        colorImage.setFromPixels(colorImagePixels, vidWidth, vidHeight);
-        
-        float dist;
-        int amp = 1;
-        for (int i = 0; i < vidWidth * vidHeight; i++) {
-            colorDiffPixels[i*3] = abs(colorPrevPixels[i*3] - colorImagePixels[i*3]) * amp;
-            colorDiffPixels[i*3+1] = abs(colorPrevPixels[i*3+1] - colorImagePixels[i*3+1]) * amp;
-            colorDiffPixels[i*3+2] = abs(colorPrevPixels[i*3+2] - colorImagePixels[i*3+2]) * amp;
+        video.update();
+        if (video.isFrameNew()){
+            // get pixels out of video frame
+            colorImagePixels = video.getPixels();
             
-            dist = colorDiffPixels[i*3] * colorDiffPixels[i*3]
-                + colorDiffPixels[i*3+1] * colorDiffPixels[i*3+1]
-                + colorDiffPixels[i*3+2] * colorDiffPixels[i*3+2];
-            dist = sqrt(dist);
+            // set color image
+            colorImage.setFromPixels(colorImagePixels, vidWidth, vidHeight);
+            
+            // set gray image
+            grayImage = colorImage;
+            
+            // learn background on user action
+            if (bLearnBakground == true){
+                grayBg = grayImage;
+                bLearnBakground = false;
+            }
+            
+            // take the abs value of the difference between background and incoming and then threshold:
+            grayDiff.absDiff(grayPrev, grayImage);
+            grayDiff.threshold(threshold);
+        
+            // find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
+            // also, find holes is set to true so we will get interior contours as well....
+            contourFinder.findContours(grayDiff, 20, (vidWidth * vidHeight)/3, 10, true);	// find holes
+            
+            // for next iteration
+            grayPrev = grayImage;
+            colorPrev = colorImage;
+            //colorPrevPixels = colorImage.getPixels();
         }
         
-        colorDiff.setFromPixels(colorDiffPixels, vidWidth, vidHeight);
-        grayDiffFromColor.setFromPixels(grayDiffFromColorPixels, vidWidth, vidHeight);
-        grayDiffFromColor.threshold(threshold);
-        
-        
-        // set grayscale image
-        grayImage = colorImage;
-        
-        // learn background on user action
-        if (bLearnBakground == true){
-            grayBg = grayImage;
-            bLearnBakground = false;
-        }
-        
-        // take the abs value of the difference between background and incoming and then threshold:
-        grayDiff.absDiff(grayPrev, grayImage);
-        grayDiff.threshold(threshold);
-        
-        // find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
-        // also, find holes is set to true so we will get interior contours as well....
-        contourFinder.findContours(grayDiffFromColor, 20, (vidWidth * vidHeight)/3, 10, true);	// find holes
-        
-        grayPrev = grayImage;
-        colorPrev = colorImage;
-        colorPrevPixels = colorImage.getPixels();
+        lastTime = curTime;
     }
+    
+    
+    
+    
+//    video.update();
+//    
+//    if (video.isFrameNew()){
+//
+//        colorImagePixels = video.getPixels();
+//        
+//        colorPrevPixels = colorPrev.getPixels();
+//        colorImage.setFromPixels(colorImagePixels, vidWidth, vidHeight);
+//        
+//        float dist;
+//        int amp = 1;
+//        for (int i = 0; i < vidWidth * vidHeight; i++) {
+//            colorDiffPixels[i*3] = abs(colorPrevPixels[i*3] - colorImagePixels[i*3]) * amp;
+//            colorDiffPixels[i*3+1] = abs(colorPrevPixels[i*3+1] - colorImagePixels[i*3+1]) * amp;
+//            colorDiffPixels[i*3+2] = abs(colorPrevPixels[i*3+2] - colorImagePixels[i*3+2]) * amp;
+//            
+//            dist = colorDiffPixels[i*3] * colorDiffPixels[i*3]
+//                + colorDiffPixels[i*3+1] * colorDiffPixels[i*3+1]
+//                + colorDiffPixels[i*3+2] * colorDiffPixels[i*3+2];
+//            dist = sqrt(dist);
+//        }
+//        
+//        colorDiff.setFromPixels(colorDiffPixels, vidWidth, vidHeight);
+//        grayDiffFromColor.setFromPixels(grayDiffFromColorPixels, vidWidth, vidHeight);
+//        grayDiffFromColor.threshold(threshold);
+//        
+//        
+//        // set grayscale image
+//        grayImage = colorImage;
+//        
+//        // learn background on user action
+//        if (bLearnBakground == true){
+//            grayBg = grayImage;
+//            bLearnBakground = false;
+//        }
+//        
+//        // take the abs value of the difference between background and incoming and then threshold:
+//        grayDiff.absDiff(grayPrev, grayImage);
+//        grayDiff.threshold(threshold);
+//        
+//        // find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
+//        // also, find holes is set to true so we will get interior contours as well....
+//        contourFinder.findContours(grayDiffFromColor, 20, (vidWidth * vidHeight)/3, 10, true);	// find holes
+//        
+//        grayPrev = grayImage;
+//        colorPrev = colorImage;
+//        colorPrevPixels = colorImage.getPixels();
+//    }
     
 }
 
@@ -122,12 +167,10 @@ void Vision::draw(){
     
     grayImage.draw(ofGetWidth() - vidWidth, 0);
     grayDiff.draw(ofGetWidth() - vidWidth, vidHeight);
-    colorDiff.draw(ofGetWidth() - vidWidth, vidHeight * 2);
-    grayDiffFromColor.draw(ofGetWidth() - vidWidth, vidHeight * 3);
     
     // then draw the contours:
     int contourFinderX = ofGetWidth() - vidWidth;
-    int contourFinderY = vidHeight * 4;
+    int contourFinderY = vidHeight * 2;
     
     ofFill();
     ofSetHexColor(0x333333);

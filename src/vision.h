@@ -59,6 +59,10 @@ public:
     
     int threshold;
     bool bLearnBakground;
+    
+    unsigned int curTime;
+    unsigned int lastTime;
+    unsigned int interval;
 
 };
 
