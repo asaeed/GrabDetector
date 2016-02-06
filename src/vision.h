@@ -36,19 +36,14 @@ public:
     
     ofxCvColorImage	colorImage;
     ofxCvColorImage colorPrev;
-    ofxCvColorImage colorDiff;
-    
-    unsigned char * colorImagePixels;
-    unsigned char * colorPrevPixels;
-    unsigned char * colorDiffPixels;
-    unsigned char * grayDiffFromColorPixels;
     
     ofxCvGrayscaleImage grayImage;
     ofxCvGrayscaleImage grayBg;
     ofxCvGrayscaleImage grayPrev;
     ofxCvGrayscaleImage grayDiff;
     
-    ofxCvGrayscaleImage grayDiffFromColor;
+    unsigned char * colorPixels;
+    unsigned char * grayPixels;
     
     ofxCvContourFinder contourFinder;
     

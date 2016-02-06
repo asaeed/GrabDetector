@@ -34,20 +34,15 @@ void Vision::setup(){
     
     colorImage.allocate(vidWidth, vidHeight);
     colorPrev.allocate(vidWidth, vidHeight);
-    colorDiff.allocate(vidWidth, vidHeight);
-    
-    // needed to allocate memory for these somehow
-    colorPrevPixels = colorDiff.getPixels();
-    colorDiffPixels = colorDiff.getPixels();
     
     grayImage.allocate(vidWidth, vidHeight);
     grayBg.allocate(vidWidth, vidHeight);
     grayPrev.allocate(vidWidth, vidHeight);
     grayDiff.allocate(vidWidth, vidHeight);
     
-    grayDiffFromColor.allocate(vidWidth, vidHeight);
-    
-    grayDiffFromColorPixels = grayDiffFromColor.getPixels();
+    // needed to allocate memory for these somehow
+    colorPixels = colorImage.getPixels();
+    grayPixels = grayImage.getPixels();
     
     bLearnBakground = true;
     threshold = 40;
@@ -71,13 +66,14 @@ void Vision::update(){
         video.update();
         if (video.isFrameNew()){
             // get pixels out of video frame
-            colorImagePixels = video.getPixels();
+            colorPixels = video.getPixels();
             
             // set color image
-            colorImage.setFromPixels(colorImagePixels, vidWidth, vidHeight);
+            colorImage.setFromPixels(colorPixels, vidWidth, vidHeight);
             
             // set gray image
             grayImage = colorImage;
+            grayPixels = grayImage.getPixels();
             
             // learn background on user action
             if (bLearnBakground == true){
@@ -93,67 +89,22 @@ void Vision::update(){
             // also, find holes is set to true so we will get interior contours as well....
             contourFinder.findContours(grayDiff, 20, (vidWidth * vidHeight)/3, 10, true);	// find holes
             
+            // loop over all pixels
+            for (int i = 0; i < vidWidth * vidHeight; i++) {
+                int rVal = colorPixels[i*3];
+                int gVal = colorPixels[i*3+1];
+                int bVal = colorPixels[i*3+2];
+                
+                int grayVal = grayPixels[i];
+            }
+            
             // for next iteration
             grayPrev = grayImage;
             colorPrev = colorImage;
-            //colorPrevPixels = colorImage.getPixels();
         }
         
         lastTime = curTime;
     }
-    
-    
-    
-    
-//    video.update();
-//    
-//    if (video.isFrameNew()){
-//
-//        colorImagePixels = video.getPixels();
-//        
-//        colorPrevPixels = colorPrev.getPixels();
-//        colorImage.setFromPixels(colorImagePixels, vidWidth, vidHeight);
-//        
-//        float dist;
-//        int amp = 1;
-//        for (int i = 0; i < vidWidth * vidHeight; i++) {
-//            colorDiffPixels[i*3] = abs(colorPrevPixels[i*3] - colorImagePixels[i*3]) * amp;
-//            colorDiffPixels[i*3+1] = abs(colorPrevPixels[i*3+1] - colorImagePixels[i*3+1]) * amp;
-//            colorDiffPixels[i*3+2] = abs(colorPrevPixels[i*3+2] - colorImagePixels[i*3+2]) * amp;
-//            
-//            dist = colorDiffPixels[i*3] * colorDiffPixels[i*3]
-//                + colorDiffPixels[i*3+1] * colorDiffPixels[i*3+1]
-//                + colorDiffPixels[i*3+2] * colorDiffPixels[i*3+2];
-//            dist = sqrt(dist);
-//        }
-//        
-//        colorDiff.setFromPixels(colorDiffPixels, vidWidth, vidHeight);
-//        grayDiffFromColor.setFromPixels(grayDiffFromColorPixels, vidWidth, vidHeight);
-//        grayDiffFromColor.threshold(threshold);
-//        
-//        
-//        // set grayscale image
-//        grayImage = colorImage;
-//        
-//        // learn background on user action
-//        if (bLearnBakground == true){
-//            grayBg = grayImage;
-//            bLearnBakground = false;
-//        }
-//        
-//        // take the abs value of the difference between background and incoming and then threshold:
-//        grayDiff.absDiff(grayPrev, grayImage);
-//        grayDiff.threshold(threshold);
-//        
-//        // find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
-//        // also, find holes is set to true so we will get interior contours as well....
-//        contourFinder.findContours(grayDiffFromColor, 20, (vidWidth * vidHeight)/3, 10, true);	// find holes
-//        
-//        grayPrev = grayImage;
-//        colorPrev = colorImage;
-//        colorPrevPixels = colorImage.getPixels();
-//    }
-    
 }
 
 //--------------------------------------------------------------
@@ -163,7 +114,6 @@ void Vision::draw(){
     ofSetHexColor(0xffffff);
     
     colorImage.draw(ofGetWidth()/2 - vidRenderWidth/2, 0, vidRenderWidth, vidRenderHeight);
-    //colorImg.draw(0, 0, vidRenderWidth, vidRenderHeight);
     
     grayImage.draw(ofGetWidth() - vidWidth, 0);
     grayDiff.draw(ofGetWidth() - vidWidth, vidHeight);
@@ -181,7 +131,6 @@ void Vision::draw(){
     //contourFinder.draw(360,540);
     
     // or, instead we can draw each blob individually from the blobs vector,
-    // this is how to get access to them:
     for (int i = 0; i < contourFinder.nBlobs; i++){
         //cout << contourFinder.blobs[i].area << endl;
         
