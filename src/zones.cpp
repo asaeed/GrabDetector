@@ -135,5 +135,5 @@ void Zones::mouseReleased(int x, int y, int button) {
     isResizing = false;
     
     // use events to send new zone data to Vision class
-    visionPtr->showZones();
+    visionPtr->refreshZones();
 }

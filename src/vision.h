@@ -23,10 +23,12 @@ public:
     void update();
     void draw();
     void keyPressed(int key);
-    void showZones();
+    void refreshZones();
     
     void glue(Zones * z);
     Zones * zonesPtr;
+    ofRectangle curZone;
+    map<int,int> zonesBreached;
     
 #ifdef _USE_LIVE_VIDEO
     ofVideoGrabber 		video;
@@ -58,6 +60,8 @@ public:
     unsigned int curTime;
     unsigned int lastTime;
     unsigned int interval;
+    
+    ofSoundPlayer soundPlayer;
 
 };
 

@@ -9,8 +9,9 @@
 #include "vision.h"
 #include "zones.h"
 
+
 //--------------------------------------------------------------
-// TODO: a better strategy might be to set the framerate very low
+// the strategy here is to set the framerate very low
 // (either on video stream or manually with a timer)
 // around 1 fps, and check for differences just in the zones by
 // comparing prev and current frame zone by zone.
@@ -48,62 +49,100 @@ void Vision::setup(){
     threshold = 40;
     
     // this interval is the "manual framerate" setting
-    interval = 0; // can be set to 1000
+    interval = 100; // can be set to 1000
     lastTime = 0;
+    
+    soundPlayer.setLoop(false);
+    soundPlayer.load("ring.wav");
+    
 }
 
 void Vision::glue(Zones * z) {
     zonesPtr = z;
 }
 
-//--------------------------------------------------------------
 void Vision::update(){
     
     curTime = ofGetElapsedTimeMillis();
     
-    if (curTime > lastTime + interval) {
+    video.update();
+    if (video.isFrameNew()){
+        // get pixels out of video frame
+        colorPixels = video.getPixels();
         
-        video.update();
-        if (video.isFrameNew()){
-            // get pixels out of video frame
-            colorPixels = video.getPixels();
-            
-            // set color image
-            colorImage.setFromPixels(colorPixels, vidWidth, vidHeight);
-            
-            // set gray image
-            grayImage = colorImage;
-            grayPixels = grayImage.getPixels();
-            
-            // learn background on user action
-            if (bLearnBakground == true){
-                grayBg = grayImage;
-                bLearnBakground = false;
-            }
-            
-            // take the abs value of the difference between background and incoming and then threshold:
-            grayDiff.absDiff(grayPrev, grayImage);
-            grayDiff.threshold(threshold);
+        // set color image
+        colorImage.setFromPixels(colorPixels, vidWidth, vidHeight);
+    
         
-            // find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
-            // also, find holes is set to true so we will get interior contours as well....
-            contourFinder.findContours(grayDiff, 20, (vidWidth * vidHeight)/3, 10, true);	// find holes
+        
+        
             
-            // loop over all pixels
-            for (int i = 0; i < vidWidth * vidHeight; i++) {
-                int rVal = colorPixels[i*3];
-                int gVal = colorPixels[i*3+1];
-                int bVal = colorPixels[i*3+2];
+        // set gray image
+        grayImage = colorImage;
+        grayPixels = grayImage.getPixels();
+        
+        // learn background on user action
+        if (bLearnBakground == true){
+            grayBg = grayImage;
+            bLearnBakground = false;
+        }
+        
+        // take the abs value of the difference between background and incoming and then threshold:
+        grayDiff.absDiff(grayPrev, grayImage);
+        grayDiff.threshold(threshold);
+    
+        // find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
+        // also, find holes is set to true so we will get interior contours as well....
+        contourFinder.findContours(grayDiff, 20, (vidWidth * vidHeight)/3, 10, true);	// find holes
+        
+        // zero out zonesBreached
+        for (map<int,int>::iterator iter = zonesBreached.begin(); iter != zonesBreached.end(); iter++) {
+            zonesBreached[iter->first] = 0;
+        }
+        
+        // see if any contours overlap with zones
+        for (int i = 0; i < contourFinder.nBlobs; i++){
+            for (int j = 0; j < zonesPtr->allZones.size(); j++) {
                 
-                int grayVal = grayPixels[i];
+                // scale down zone rect to match blob bounding rect size
+                curZone = ofRectangle(zonesPtr->allZones[j].getPosition()/4, zonesPtr->allZones[j].getWidth()/4, zonesPtr->allZones[j].getHeight()/4);
+                
+                if (contourFinder.blobs[i].boundingRect.intersects(curZone)) {
+                    //cout << "zone " << j << " breached" << endl;
+                    zonesBreached[j]++;
+                    continue;
+                }
             }
+        }
+        
+        if (curTime > lastTime + interval) {
+            
+            // print breaches
+            for (map<int,int>::iterator iter = zonesBreached.begin(); iter != zonesBreached.end(); iter++) {
+                if (iter->second > 0) {
+                    cout << "zone " << iter->first << " breached " << iter->second << " times" << endl;
+                    
+                    // play a sound to help with debugging
+                    soundPlayer.setSpeed(1.0f + iter->first/2.0f);
+                    soundPlayer.play();
+                }
+            }
+            
+//            // loop over all pixels
+//            for (int i = 0; i < vidWidth * vidHeight; i++) {
+//                int rVal = colorPixels[i*3];
+//                int gVal = colorPixels[i*3+1];
+//                int bVal = colorPixels[i*3+2];
+//                
+//                int grayVal = grayPixels[i];
+//            }
             
             // for next iteration
             grayPrev = grayImage;
             colorPrev = colorImage;
+            
+            lastTime = curTime;
         }
-        
-        lastTime = curTime;
     }
 }
 
@@ -113,35 +152,16 @@ void Vision::draw(){
     // draw the incoming, the grayscale, the bg and the thresholded difference
     ofSetHexColor(0xffffff);
     
-    colorImage.draw(ofGetWidth()/2 - vidRenderWidth/2, 0, vidRenderWidth, vidRenderHeight);
-    
+    //colorImage.draw(ofGetWidth()/2 - vidRenderWidth/2, 0, vidRenderWidth, vidRenderHeight);
+    colorImage.draw(0, 0, vidRenderWidth, vidRenderHeight);
     grayImage.draw(ofGetWidth() - vidWidth, 0);
     grayDiff.draw(ofGetWidth() - vidWidth, vidHeight);
     
-    // then draw the contours:
-    int contourFinderX = ofGetWidth() - vidWidth;
-    int contourFinderY = vidHeight * 2;
-    
+    // draw counter finder
     ofFill();
     ofSetHexColor(0x333333);
-    ofDrawRectangle(contourFinderX, contourFinderY, vidWidth, vidHeight);
-    ofSetHexColor(0xffffff);
-    
-    // we could draw the whole contour finder
-    //contourFinder.draw(360,540);
-    
-    // or, instead we can draw each blob individually from the blobs vector,
-    for (int i = 0; i < contourFinder.nBlobs; i++){
-        //cout << contourFinder.blobs[i].area << endl;
-        
-        contourFinder.blobs[i].draw(contourFinderX, contourFinderY);
-        
-        // draw over the centroid if the blob is a hole
-        ofSetColor(255);
-        if(contourFinder.blobs[i].hole){
-            ofDrawBitmapString("hole", contourFinder.blobs[i].boundingRect.getCenter().x + contourFinderX, contourFinder.blobs[i].boundingRect.getCenter().y + contourFinderY);
-        }
-    }
+    ofDrawRectangle(ofGetWidth() - vidWidth, vidHeight * 2, vidWidth, vidHeight);
+    contourFinder.draw(ofGetWidth() - vidWidth, vidHeight * 2);
     
     // finally, a report:
     ofSetHexColor(0xffffff);
@@ -172,7 +192,7 @@ void Vision::keyPressed(int key){
     }
 }
 
-void Vision::showZones() {
+void Vision::refreshZones() {
     cout << zonesPtr->allZones.size() << endl;
 }
 
