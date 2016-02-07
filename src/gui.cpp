@@ -8,89 +8,56 @@
 
 #include "gui.h"
 
-void Gui::setup(){
-    ofSetVerticalSync(true);
+void Gui::setup()
+{
+    datgui = new ofxDatGui(100, 100);
+    datgui->addHeader(":: Drag ::");
+    datgui->addFooter();
+    datgui->addSlider("slider", 0.0f, 100.0f, 50.0f);
+
+    //sliderFloat->onSliderEvent(this, &Gui::onSliderEvent);
+    //ofParamFloat.addListener(this, &Gui::onParamFloatChanged);
     
-    // we add this listener before setting up so the initial circle resolution is correct
-    circleResolution.addListener(this, &Gui::circleResolutionChanged);
-    ringButton.addListener(this, &Gui::ringButtonPressed);
-    
-    gui.setup(); // most of the time you don't need a name
-    gui.add(filled.setup("fill", false));
-    gui.add(radius.setup("radius", 140, 10, 300));
-    gui.add(center.setup("center", ofVec2f(ofGetWidth()*.5, ofGetHeight()*.5), ofVec2f(0, 0), ofVec2f(ofGetWidth(), ofGetHeight())));
-    gui.add(color.setup("color", ofColor(100, 100, 140), ofColor(0, 0), ofColor(255, 255)));
-    gui.add(circleResolution.setup("circle res", 5, 3, 90));
-    gui.add(twoCircles.setup("two circles"));
-    gui.add(ringButton.setup("ring"));
-    gui.add(screenSize.setup("screen size", ofToString(ofGetWidth())+"x"+ofToString(ofGetHeight())));
-    
-    bHide = false;
-    
-    ring.load("ring.wav");
 }
 
-//--------------------------------------------------------------
-void Gui::exit(){
-    ringButton.removeListener(this, &Gui::ringButtonPressed);
+void Gui::onParamIntChanged(int & n)
+{
+    cout << "onParamIntChanged "<< n << endl;
 }
 
-//--------------------------------------------------------------
-void Gui::circleResolutionChanged(int &circleResolution){
-    ofSetCircleResolution(circleResolution);
+void Gui::onParamFloatChanged(float & f)
+{
+    cout << "onParamFloatChanged "<< f << endl;
 }
 
-//--------------------------------------------------------------
-void Gui::ringButtonPressed(){
-    ring.play();
-}
-
-//--------------------------------------------------------------
-void Gui::update(){
-    ofSetCircleResolution(circleResolution);
-}
-
-//--------------------------------------------------------------
-void Gui::draw(){
-    
-    if(filled){
-        ofFill();
-    }else{
-        ofNoFill();
-    }
-    
-    ofSetColor(color);
-    if(twoCircles){
-        ofDrawCircle(center->x-radius*.5, center->y, radius );
-        ofDrawCircle(center->x+radius*.5, center->y, radius );
-    }else{
-        ofDrawCircle((ofVec2f)center, radius );
-    }
-    
-    // auto draw?
-    // should the gui control hiding?
-    if(!bHide){
-        gui.draw();
+void Gui::onSliderEvent(ofxDatGuiSliderEvent e)
+{
+    if(e.target == slider){
+        ofSetBackgroundColor(ofColor::white*e.scale);
+        cout << "value = " << e.value << " : scale = " << e.scale << endl;
+    }   else if (e.target == sliderInt){
+        //  uncomment this to print the change event received from the int slider //
+        //  cout << "value = " << e.value << " : scale = " << e.scale << endl;
+    }   else if (e.target == sliderFloat){
+        //  uncomment this to print the change event received from the float slider //
+        //  cout << "value = " << e.value << " : scale = " << e.scale << endl;
     }
 }
 
-//--------------------------------------------------------------
-void Gui::keyPressed(int key){
-    if(key == 'h'){
-        bHide = !bHide;
-    }
-    else if(key == 's'){
-        gui.saveToFile("settings.xml");
-    }
-    else if(key == 'l'){
-        gui.loadFromFile("settings.xml");
-    }
-    else if(key == ' '){
-        color = ofColor(255);
-    }
+void Gui::update()
+{
+    datgui->update();
 }
 
-//--------------------------------------------------------------
-void Gui::windowResized(int w, int h){
-    screenSize = ofToString(w) + "x" + ofToString(h);
+void Gui::draw()
+{
+    datgui->draw();
+}
+
+bool Gui::mousePressed(int x, int y, int button) {
+    if (ofRectangle(datgui->getPosition(), datgui->getWidth(), datgui->getHeight()).inside(x, y)) {
+        return true;
+    } else {
+        return false;
+    }
 }

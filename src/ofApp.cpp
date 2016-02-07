@@ -50,6 +50,8 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+    if (gui.mousePressed(x, y, button)) return;
+    
     zones.mousePressed(x, y, button);
 }
 
