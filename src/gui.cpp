@@ -7,22 +7,28 @@
 //
 
 #include "gui.h"
+#include "vision.h"
 
 void Gui::setup()
 {
-    datgui = new ofxDatGui(100, 100);
+    datgui = new ofxDatGui(600, 600);
     datgui->addHeader(":: Drag ::");
     datgui->addFooter();
-    datgui->addSlider("slider", 0.0f, 100.0f, 50.0f);
+    
+    sliderThreshold = datgui->addSlider("threshold", 0, 100, 20);
+    cout << visionPtr->threshold << endl;
+    sliderThreshold->bind(visionPtr->threshold);
+    
+    vector<string> options = {"ONE", "TWO", "THREE", "FOUR"};
+    datgui->addDropdown("Detection Method", options);
 
     //sliderFloat->onSliderEvent(this, &Gui::onSliderEvent);
     //ofParamFloat.addListener(this, &Gui::onParamFloatChanged);
     
 }
 
-void Gui::onParamIntChanged(int & n)
-{
-    cout << "onParamIntChanged "<< n << endl;
+void Gui::glue(Vision * v) {
+    this->visionPtr = v;
 }
 
 void Gui::onParamFloatChanged(float & f)
@@ -32,15 +38,9 @@ void Gui::onParamFloatChanged(float & f)
 
 void Gui::onSliderEvent(ofxDatGuiSliderEvent e)
 {
-    if(e.target == slider){
+    if(e.target == sliderThreshold){
         ofSetBackgroundColor(ofColor::white*e.scale);
         cout << "value = " << e.value << " : scale = " << e.scale << endl;
-    }   else if (e.target == sliderInt){
-        //  uncomment this to print the change event received from the int slider //
-        //  cout << "value = " << e.value << " : scale = " << e.scale << endl;
-    }   else if (e.target == sliderFloat){
-        //  uncomment this to print the change event received from the float slider //
-        //  cout << "value = " << e.value << " : scale = " << e.scale << endl;
     }
 }
 

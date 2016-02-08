@@ -2,12 +2,14 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    vision.setup();
-    gui.setup();
-    zones.setup();
     
     vision.glue(&zones);
     zones.glue(&vision);
+    gui.glue(&vision);
+    
+    vision.setup();
+    gui.setup();
+    zones.setup();
 }
 
 //--------------------------------------------------------------

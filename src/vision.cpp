@@ -72,10 +72,6 @@ void Vision::update(){
         
         // set color image
         colorImage.setFromPixels(colorPixels, vidWidth, vidHeight);
-    
-        
-        
-        
             
         // set gray image
         grayImage = colorImage;
@@ -123,7 +119,7 @@ void Vision::update(){
                     cout << "zone " << iter->first << " breached " << iter->second << " times" << endl;
                     
                     // play a sound to help with debugging
-                    soundPlayer.setSpeed(1.0f + iter->first/2.0f);
+                    soundPlayer.setSpeed(1.0f + iter->first/4.0f);
                     soundPlayer.play();
                 }
             }

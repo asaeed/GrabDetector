@@ -12,6 +12,8 @@
 #include "ofMain.h"
 #include "ofxDatGui.h"
 
+class Vision;
+
 class Gui {
     
     
@@ -21,11 +23,12 @@ public:
     void draw();
     bool mousePressed(int x, int y, int button);
     
+    void glue(Vision * v);
+    Vision * visionPtr;
+    
     ofxDatGui * datgui;
     
-    ofxDatGuiSlider * slider;
-    ofxDatGuiSlider * sliderInt;
-    ofxDatGuiSlider * sliderFloat;
+    ofxDatGuiSlider * sliderThreshold;
     
     ofParameter<int> ofParamInt;
     ofParameter<float> ofParamFloat;
